@@ -160,7 +160,8 @@ cython_debug/
 .idea/
 models/*
 !models/README.md
-dataset/demo/
-dataset/train/
-dataset/test/
+datasets/demo/
+datasets/train/
+datasets/tune/
+datasets/test/
 outputs/

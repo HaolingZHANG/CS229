@@ -10,7 +10,7 @@ def task():
     if not path.exists("../outputs/task2/"):
         mkdir("../outputs/task2/")
 
-    mask_data, info_data = load_test_pair(folder_path="../dataset/test/", verbose=True)
+    mask_data, info_data = load_test_pair(verbose=True)
 
     print("run the test.")
     model, monitor, f1_scores, case = ComparedModel(), Monitor(), [], None
@@ -18,6 +18,10 @@ def task():
         save_path = "../outputs/task2/" + str(process_index + 1).zfill(len(str(len(info_data)))) + ".pkl"
         if not path.exists(save_path):
             obtained_mask = model(image=image)
+
+            if process_index == 0 and (not path.exists("../dataset/demo/seg_challenge.tiff")):
+                io.imsave("../dataset/demo/seg_challenge.tiff", obtained_mask, check_contrast=False)
+
             stats = compare(expected_mask=expected_mask, obtained_mask=obtained_mask)
             save_data(save_path=save_path, information=stats)
         else:
@@ -26,20 +30,24 @@ def task():
         f1_scores.append(stats["f1"])
         monitor(process_index + 1, len(info_data))
 
+    return f1_scores
+
+
+def show(f1_scores: list):
     figure = pyplot.figure(figsize=(10, 5), tight_layout=True)
     grid = pyplot.GridSpec(2, 4)
 
     x, y = array([95, 190, 190, 95, 95]), array([255, 255, 350, 350, 255])
     # noinspection PyUnresolvedReferences
     pyplot.subplot(grid[0, 0])
-    image = repeat(io.imread("../dataset/demo/medsam.png")[:, :, None], 3, axis=-1)
+    image = repeat(io.imread("../dataset/demo/medsam.tiff")[:, :, None], 3, axis=-1)
     pyplot.plot(x, y, lw=0.75, ls="--", c="k")
     pyplot.imshow(image)
     pyplot.axis("off")
 
     # noinspection PyUnresolvedReferences
     pyplot.subplot(grid[0, 1])
-    image = (1 - repeat(io.imread("../dataset/demo/seg_medsam.png")[:, :, None], 3, axis=-1)) * 255
+    image = (1 - repeat(io.imread("../dataset/demo/seg_medsam.tiff")[:, :, None], 3, axis=-1)) * 255
     pyplot.plot(x, y, lw=0.75, ls="--", c="k")
     pyplot.imshow(image)
     pyplot.xticks([])
@@ -51,7 +59,7 @@ def task():
     pyplot.subplot(grid[1, 0])
     image = io.imread("../dataset/demo/challenge.tiff")
     pyplot.imshow(image)
-    pyplot.plot(x, y, lw=0.75, ls="--", c="k")
+    pyplot.plot(x, y, lw=0.75, ls="--", c="w")
     pyplot.axis("off")
 
     # noinspection PyUnresolvedReferences
@@ -89,4 +97,4 @@ def task():
 
 
 if __name__ == "__main__":
-    task()
+    show(task())
