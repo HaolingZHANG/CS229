@@ -1,6 +1,6 @@
 from datetime import datetime
 from matplotlib import pyplot
-from numpy import ndarray, array, arange, zeros, repeat, min, max, sum, ceil, argmin, where
+from numpy import ndarray, array, arange, zeros, repeat, min, max, sum, ceil, argmin, where, uint8
 from os import listdir, path, mkdir
 from PIL import Image
 from stardist.matching import matching
@@ -94,7 +94,7 @@ def load_train_pair(verbose: bool = False) \
                 value_1[info] = image
             else:
                 image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
-                value_2[info] = image
+                value_2[info] = image.astype(uint8)
             indices.add(info)
             monitor(process_index + 1, len(child_paths))
 
@@ -112,7 +112,7 @@ def load_train_pair(verbose: bool = False) \
                 value_1[info] = image
             else:
                 image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
-                value_2[info] = image
+                value_2[info] = image.astype(uint8)
             indices.add(info)
 
         mask_data, info_data = [], []
@@ -146,7 +146,7 @@ def load_test_pair(verbose: bool = False) \
                 value_1[info] = image
             else:
                 image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
-                value_2[info] = image
+                value_2[info] = image.astype(uint8)
             indices.add(info)
             monitor(process_index + 1, len(chile_paths))
 
@@ -164,7 +164,7 @@ def load_test_pair(verbose: bool = False) \
                 value_1[info] = image
             else:
                 image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
-                value_2[info] = image
+                value_2[info] = image.astype(uint8)
             indices.add(info)
 
         mask_data, info_data = [], []
@@ -210,7 +210,7 @@ def load_tune_pair(side: int,
             else:
                 image = array(image)
                 image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
-                value_2[info] = image
+                value_2[info] = image.astype(uint8)
             indices.add(info)
             monitor(process_index + 1, len(chile_paths))
 
@@ -232,7 +232,7 @@ def load_tune_pair(side: int,
             else:
                 image = array(image)
                 image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
-                value_2[info] = image
+                value_2[info] = image.astype(uint8)
             indices.add(info)
 
         mask_data, info_data = [], []
