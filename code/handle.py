@@ -1,6 +1,6 @@
 from datetime import datetime
 from matplotlib import pyplot
-from numpy import ndarray, array, arange, zeros, min, max, sum, ceil, argmin, where
+from numpy import ndarray, array, arange, zeros, repeat, min, max, sum, ceil, argmin, where
 from os import listdir, path, mkdir
 from PIL import Image
 from stardist.matching import matching
@@ -93,6 +93,7 @@ def load_train_pair(verbose: bool = False) \
             if "label" in child_path:
                 value_1[info] = image
             else:
+                image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
                 value_2[info] = image
             indices.add(info)
             monitor(process_index + 1, len(child_paths))
@@ -110,6 +111,7 @@ def load_train_pair(verbose: bool = False) \
             if "label" in child_path:
                 value_1[info] = image
             else:
+                image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
                 value_2[info] = image
             indices.add(info)
 
@@ -143,6 +145,7 @@ def load_test_pair(verbose: bool = False) \
             if "label" in child_path:
                 value_1[info] = image
             else:
+                image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
                 value_2[info] = image
             indices.add(info)
             monitor(process_index + 1, len(chile_paths))
@@ -160,6 +163,7 @@ def load_test_pair(verbose: bool = False) \
             if "label" in child_path:
                 value_1[info] = image
             else:
+                image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
                 value_2[info] = image
             indices.add(info)
 
@@ -204,7 +208,9 @@ def load_tune_pair(side: int,
             if "label" in child_path:
                 value_1[info] = array(image)
             else:
-                value_2[info] = array(image)
+                image = array(image)
+                image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
+                value_2[info] = image
             indices.add(info)
             monitor(process_index + 1, len(chile_paths))
 
@@ -224,7 +230,9 @@ def load_tune_pair(side: int,
             if "label" in child_path:
                 value_1[info] = array(image)
             else:
-                value_2[info] = array(image)
+                image = array(image)
+                image = repeat(image[:, :, None], 3, axis=-1) if len(image.shape) == 2 else image
+                value_2[info] = image
             indices.add(info)
 
         mask_data, info_data = [], []

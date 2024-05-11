@@ -37,41 +37,8 @@ def show(f1_scores: list):
     figure = pyplot.figure(figsize=(10, 5), tight_layout=True)
     grid = pyplot.GridSpec(2, 4)
 
-    x, y = array([95, 190, 190, 95, 95]), array([255, 255, 350, 350, 255])
-    # noinspection PyUnresolvedReferences
-    pyplot.subplot(grid[0, 0])
-    image = repeat(io.imread("../dataset/demo/medsam.tiff")[:, :, None], 3, axis=-1)
-    pyplot.plot(x, y, lw=0.75, ls="--", c="k")
-    pyplot.imshow(image)
-    pyplot.axis("off")
-
-    # noinspection PyUnresolvedReferences
-    pyplot.subplot(grid[0, 1])
-    image = (1 - repeat(io.imread("../dataset/demo/seg_medsam.tiff")[:, :, None], 3, axis=-1)) * 255
-    pyplot.plot(x, y, lw=0.75, ls="--", c="k")
-    pyplot.imshow(image)
-    pyplot.xticks([])
-    pyplot.yticks([])
-
-    x, y = array([440, 640, 640, 440, 440]), array([440, 440, 640, 640, 440])
-
-    # noinspection PyUnresolvedReferences
-    pyplot.subplot(grid[1, 0])
-    image = io.imread("../dataset/demo/challenge.tiff")
-    pyplot.imshow(image)
-    pyplot.plot(x, y, lw=0.75, ls="--", c="w")
-    pyplot.axis("off")
-
-    # noinspection PyUnresolvedReferences
-    pyplot.subplot(grid[1, 1])
-    image = (1 - repeat(io.imread("../dataset/demo/seg_challenge.tiff")[:, :, None], 3, axis=-1)) * 255
-    pyplot.imshow(image)
-    pyplot.plot(x, y, lw=0.75, ls="--", c="k")
-    pyplot.xticks([])
-    pyplot.yticks([])
-
-    # noinspection PyUnresolvedReferences
-    ax = pyplot.subplot(grid[:, 2:])
+    # noinspection PyTypeChecker
+    ax = pyplot.subplot(grid[:, :2])
     pyplot.text(450 / 2, 0.01, "all results are 0", ha="center", va="bottom")
     pyplot.plot(arange(len(f1_scores)), sorted(f1_scores), color="black", label="reported", zorder=3)
     pyplot.xlabel("sample index (ordered by F1 score)")
@@ -85,12 +52,44 @@ def show(f1_scores: list):
     # noinspection PyUnresolvedReferences
     ax.spines["right"].set_visible(False)
 
+    x, y = array([95, 190, 190, 95, 95]), array([255, 255, 350, 350, 255])
+
+    # noinspection PyTypeChecker
+    pyplot.subplot(grid[0, 2])
+    image = repeat(io.imread("../datasets/demo/medsam.tiff")[:, :, None], 3, axis=-1)
+    pyplot.plot(x, y, lw=0.75, ls="--", c="k")
+    pyplot.imshow(image)
+    pyplot.axis("off")
+
+    # noinspection PyTypeChecker
+    pyplot.subplot(grid[1, 2])
+    image = (1 - repeat(io.imread("../datasets/demo/seg_medsam.tiff")[:, :, None], 3, axis=-1)) * 255
+    pyplot.plot(x, y, lw=0.75, ls="--", c="k")
+    pyplot.imshow(image)
+    pyplot.xticks([])
+    pyplot.yticks([])
+
+    x, y = array([440, 640, 640, 440, 440]), array([440, 440, 640, 640, 440])
+
+    # noinspection PyTypeChecker
+    pyplot.subplot(grid[0, 3])
+    image = io.imread("../datasets/demo/challenge.tiff")
+    pyplot.imshow(image)
+    pyplot.plot(x, y, lw=0.75, ls="--", c="w")
+    pyplot.axis("off")
+
+    # noinspection PyTypeChecker
+    pyplot.subplot(grid[1, 3])
+    image = (1 - repeat(io.imread("../datasets/demo/seg_challenge.tiff")[:, :, None], 3, axis=-1)) * 255
+    pyplot.imshow(image)
+    pyplot.plot(x, y, lw=0.75, ls="--", c="k")
+    pyplot.xticks([])
+    pyplot.yticks([])
+
     figure.align_labels()
     figure.text(0.02, 0.99, "a", va="center", ha="center", fontsize=12)
-    figure.text(0.28, 0.99, "b", va="center", ha="center", fontsize=12)
-    figure.text(0.02, 0.54, "c", va="center", ha="center", fontsize=12)
-    figure.text(0.28, 0.54, "d", va="center", ha="center", fontsize=12)
-    figure.text(0.49, 0.99, "e", va="center", ha="center", fontsize=12)
+    figure.text(0.53, 0.99, "b", va="center", ha="center", fontsize=12)
+    figure.text(0.76, 0.99, "c", va="center", ha="center", fontsize=12)
 
     pyplot.savefig("../outputs/result-02.pdf", format="pdf", bbox_inches="tight", dpi=600)
     pyplot.close()

@@ -47,8 +47,7 @@ def show(investigated_scores: list):
     figure = pyplot.figure(figsize=(10, 5), tight_layout=True)
 
     ax = pyplot.subplot(1, 2, 1)
-    violin = pyplot.violinplot([reported_scores, investigated_scores],
-                               positions=[1, 2], widths=0.5, showextrema=False)
+    violin = pyplot.violinplot([reported_scores, investigated_scores], positions=[1, 2], showextrema=False)
     # noinspection PyTypeChecker
     for patch in violin["bodies"]:
         patch.set_edgecolor("black")

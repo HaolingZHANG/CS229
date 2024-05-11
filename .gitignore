@@ -164,4 +164,5 @@ datasets/demo/
 datasets/train/
 datasets/tune/
 datasets/test/
-outputs/
+outputs/*
+!outputs/README.md
