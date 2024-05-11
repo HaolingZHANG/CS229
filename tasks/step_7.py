@@ -22,7 +22,7 @@ def show(batch_number: int):
             results.append(load_data(load_path=load_path)["f1"])
         record_2.append(array(results))
 
-    pyplot.figure(figsize=(10, 5), tight_layout=True)
+    figure = pyplot.figure(figsize=(10, 5), tight_layout=True)
     ax = pyplot.subplot(1, 2, 1)
     violin = pyplot.violinplot([record_1["b"], record_1["l"], record_1["h"]],
                                positions=[1, 2], showextrema=False)
@@ -63,6 +63,13 @@ def show(batch_number: int):
     ax.spines["top"].set_visible(False)
     # noinspection PyUnresolvedReferences
     ax.spines["right"].set_visible(False)
+
+    figure.align_labels()
+    figure.text(0.02, 0.99, "a", va="center", ha="center", fontsize=12)
+    figure.text(0.53, 0.99, "b", va="center", ha="center", fontsize=12)
+
+    pyplot.savefig("../outputs/result-03.pdf", format="pdf", bbox_inches="tight", dpi=600)
+    pyplot.close()
 
 
 if __name__ == "__main__":
