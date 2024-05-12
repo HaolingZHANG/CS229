@@ -1,6 +1,7 @@
 from cellpose import models
-from numpy import ndarray, array, zeros, where
+from numpy import ndarray, array, zeros, where, uint8
 from segment_anything import sam_model_registry, SamAutomaticMaskGenerator
+from skimage import transform
 from torch import Tensor, nn, no_grad, as_tensor, cuda, sigmoid, float32
 from typing import Union
 
@@ -19,18 +20,36 @@ class BaselineModel:
 
 class ComparedModel:
 
-    def __init__(self):
+    def __init__(self,
+                 model_type: str):
         device = "cuda:0" if cuda.is_available() else "cpu"
-        sam = sam_model_registry["vit_b"](checkpoint="../models/sam_vit_b_01ec64.pth").to(device)
+        if model_type == "medsam":
+            sam = sam_model_registry["vit_b"](checkpoint="../models/medsam_vit_b.pth").to(device)
+        elif model_type == "vit_b":
+            sam = sam_model_registry[model_type](checkpoint="../models/sam_vit_b_01ec64.pth").to(device)
+        elif model_type == "vit_l":
+            sam = sam_model_registry[model_type](checkpoint="../models/sam_vit_l_0b3195.pth").to(device)
+        else:
+            sam = sam_model_registry[model_type](checkpoint="../models/sam_vit_h_4b8939.pth").to(device)
         self.model = SamAutomaticMaskGenerator(sam)
 
     def __call__(self,
                  image: ndarray) \
             -> ndarray:
+        original_size, changed = image.shape, False
+        if image.shape[0] > 1024 or image.shape[1] > 1024:
+            image = transform.resize(image, (1024, 1024), order=3, preserve_range=True, anti_aliasing=True)
+            image = image.astype(uint8)
+            changed = True
+
         mask, count = zeros(image.shape[:2], dtype=int), 0
         for index, mask_info in enumerate(self.model.generate(image)):
             mask[where(mask_info["segmentation"])] = index + 1
             count += 1
+
+        if changed:
+            mask = transform.resize(mask, original_size[:2], order=3, preserve_range=True, anti_aliasing=True)
+            mask = mask.astype(uint8)
 
         return mask
 
