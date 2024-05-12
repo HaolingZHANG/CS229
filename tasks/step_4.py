@@ -38,7 +38,7 @@ def task():
             save_data(save_path=save_path, information=stats)
         else:
             stats = load_data(load_path=save_path)
-        monitor(process_index + 1, len(info_data), extra={"F1 score": stats})
+        monitor(process_index + 1, len(info_data), extra={"F1 score": stats["f1"]})
 
     print("run the test for high resolution SAM.")
     model = ComparedModel(model_type="vit_h")
@@ -49,7 +49,7 @@ def task():
             save_data(save_path=save_path, information=stats)
         else:
             stats = load_data(load_path=save_path)
-        monitor(process_index + 1, len(info_data), extra={"F1 score": stats})
+        monitor(process_index + 1, len(info_data), extra={"F1 score": stats["f1"]})
 
 
 if __name__ == "__main__":

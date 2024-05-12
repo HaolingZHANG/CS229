@@ -13,7 +13,7 @@ def task():
     mask_data, info_data = load_test_pair(verbose=True)
 
     print("run the test.")
-    model, monitor, f1_scores, case = ComparedModel(), Monitor(), [], None
+    model, monitor, f1_scores, case = ComparedModel(model_type="medsam"), Monitor(), [], None
     for process_index, (expected_mask, image) in enumerate(zip(mask_data, info_data)):
         save_path = "../outputs/task2/" + str(process_index + 1).zfill(len(str(len(info_data)))) + ".pkl"
         if not path.exists(save_path):
