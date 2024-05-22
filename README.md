@@ -14,7 +14,7 @@ By enhancing the accuracy, adaptability, and application breadth of segmentation
 
 
 ## Acknowledgements
-The project benefited from the support provided by Prof. Jesper N. Tegn\'{e}r, whose guidance was instrumental in its execution. 
+The project benefited from the support provided by Prof. Jesper N. Tegner, whose guidance was instrumental in its execution. 
 Additionally, Dr. Sumeer Khan provided invaluable assistance with the research background and the methodology design.
 
 ## Data availability
