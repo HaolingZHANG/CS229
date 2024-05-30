@@ -1,5 +1,5 @@
 from cellpose import models
-from numpy import ndarray, array, zeros, where, uint8
+from numpy import ndarray, array, zeros, where, uint8, ndenumerate
 from segment_anything import sam_model_registry, SamAutomaticMaskGenerator
 from skimage import transform
 from torch import Tensor, nn, no_grad, as_tensor, cuda, sigmoid, float32
@@ -34,7 +34,8 @@ class ComparedModel:
         self.model = SamAutomaticMaskGenerator(sam)
 
     def __call__(self,
-                 image: ndarray) \
+                 image: ndarray,
+                 structure_changed: bool = False) \
             -> ndarray:
         original_size, changed = image.shape, False
         if image.shape[0] > 1024 or image.shape[1] > 1024:
@@ -42,16 +43,23 @@ class ComparedModel:
             image = image.astype(uint8)
             changed = True
 
-        mask, count = zeros(image.shape[:2], dtype=int), 0
+        mask = zeros(image.shape[:2], dtype=int)
         for index, mask_info in enumerate(self.model.generate(image)):
             mask[where(mask_info["segmentation"])] = index + 1
-            count += 1
 
         if changed:
             mask = transform.resize(mask, original_size[:2], order=3, preserve_range=True, anti_aliasing=True)
             mask = mask.astype(uint8)
 
-        return mask
+        if structure_changed:
+            data = []
+            for (x, y), mask_index in ndenumerate(mask):
+                if mask_index > 0:
+                    data.append([x, y, mask_index])
+            return array(data)
+
+        else:
+            return mask
 
 
 class FineTunedModel(nn.Module):
